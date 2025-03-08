@@ -32,7 +32,7 @@ let ghostInterval; // Hayalet hareket interval'ını kontrol etmek için
 
 // Oyun alanını başlat
 function setupBoard() {
-  gameBoardElement.style.gridTemplateColumns = `repeat(${board[0].length}, 20px)`;
+  gameBoardElement.style.gridTemplateColumns = `repeat(${board[0].length}, 24px)`;
   drawBoard();
 }
 
