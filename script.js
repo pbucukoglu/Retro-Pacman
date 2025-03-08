@@ -1,9 +1,9 @@
 // Oyun haritası: 
-// 1 = Duvar, 0 = Pellet, 2 = Pacman başlangıç, 3 = Hayalet başlangıç, 
-// 4 = Boş (pellet yendi)
+// 1 = Duvar, 0 = Pellet, 2 = Pacman başlangıç, 
+// 4 = Pellet yendi (boş)
 const board = [
   [1,1,1,1,1,1,1,1,1,1],
-  [1,2,0,0,0,0,0,0,3,1],
+  [1,2,0,0,0,0,0,0,0,1],
   [1,0,1,0,1,1,0,1,0,1],
   [1,0,1,0,0,0,0,1,0,1],
   [1,0,1,1,1,1,0,1,0,1],
@@ -16,14 +16,22 @@ const board = [
 
 let score = 0;
 let pacmanPos = { x: 1, y: 1 };
-let ghostPos = { x: 8, y: 1 };
+// Birden fazla hayalet ekliyoruz
+let ghosts = [
+  { x: 8, y: 1 },
+  { x: 8, y: 8 }
+];
 
 const gameBoardElement = document.getElementById('game-board');
 const scoreElement = document.getElementById('score');
+const messageDiv = document.getElementById('message');
+const messageText = document.getElementById('message-text');
+const restartBtn = document.getElementById('restart-btn');
 
-// Oyun alanının başlangıç ayarlarını yap
+let ghostInterval; // Hayalet hareket interval'ını kontrol etmek için
+
+// Oyun alanını başlat
 function setupBoard() {
-  // Satır uzunluğuna göre grid kolonlarını ayarla
   gameBoardElement.style.gridTemplateColumns = `repeat(${board[0].length}, 20px)`;
   drawBoard();
 }
@@ -36,12 +44,11 @@ function drawBoard() {
       const cellDiv = document.createElement('div');
       cellDiv.classList.add('cell');
       
-      // Hücre değerine göre stil belirle
       if (board[y][x] === 1) {
         cellDiv.classList.add('wall');
-      } else if (x === pacmanPos.x && y === pacmanPos.y) {
+      } else if (pacmanPos.x === x && pacmanPos.y === y) {
         cellDiv.classList.add('pacman');
-      } else if (x === ghostPos.x && y === ghostPos.y) {
+      } else if (ghosts.some(g => g.x === x && g.y === y)) {
         cellDiv.classList.add('ghost');
       } else if (board[y][x] === 0) {
         const pelletDiv = document.createElement('div');
@@ -54,87 +61,116 @@ function drawBoard() {
   scoreElement.textContent = `Skor: ${score}`;
 }
 
-// Pacman hareketini kontrol et
+// Pacman hareketi
 function movePacman(dx, dy) {
   const newX = pacmanPos.x + dx;
   const newY = pacmanPos.y + dy;
   
-  // Harita sınırlarını kontrol et
-  if (newY < 0 || newY >= board.length || newX < 0 || newX >= board[0].length) {
-    return;
-  }
-  // Duvar kontrolü
-  if (board[newY][newX] === 1) {
-    return;
-  }
+  // Sınır ve duvar kontrolü
+  if (newY < 0 || newY >= board.length || newX < 0 || newX >= board[0].length) return;
+  if (board[newY][newX] === 1) return;
   
-  // Pellet varsa yedi ve skora ekle
+  // Pellet yeme
   if (board[newY][newX] === 0) {
     score++;
-    // Pellet yendiğinde hücre boş olarak işaretlensin
-    board[newY][newX] = 4;
+    board[newY][newX] = 4; // Pellet yendi, boş olarak işaretle
   }
   
   pacmanPos = { x: newX, y: newY };
   checkCollision();
   drawBoard();
+  checkWinCondition();
 }
 
-// Hayalet için rastgele hareket algoritması
-function moveGhost() {
-  const directions = [
-    { dx: 0, dy: -1 },
-    { dx: 0, dy: 1 },
-    { dx: -1, dy: 0 },
-    { dx: 1, dy: 0 }
-  ];
-  
-  // Rastgele yön seçmek için diziyi karıştır
-  directions.sort(() => Math.random() - 0.5);
-  
-  for (let dir of directions) {
-    const newX = ghostPos.x + dir.dx;
-    const newY = ghostPos.y + dir.dy;
-    // Sınır kontrolü
-    if (newY < 0 || newY >= board.length || newX < 0 || newX >= board[0].length) {
-      continue;
+// Hayalet hareketi: Pacman'e en yakın hamleyi yapacak şekilde hareket
+function moveGhosts() {
+  ghosts.forEach(ghost => {
+    const directions = [
+      { dx: 0, dy: -1 },
+      { dx: 0, dy: 1 },
+      { dx: -1, dy: 0 },
+      { dx: 1, dy: 0 }
+    ];
+    let bestMove = null;
+    let minDistance = Infinity;
+    
+    directions.forEach(dir => {
+      const newX = ghost.x + dir.dx;
+      const newY = ghost.y + dir.dy;
+      if (newY >= 0 && newY < board.length && newX >= 0 && newX < board[0].length) {
+        if (board[newY][newX] !== 1) {
+          const distance = Math.abs(pacmanPos.x - newX) + Math.abs(pacmanPos.y - newY);
+          if (distance < minDistance) {
+            minDistance = distance;
+            bestMove = { x: newX, y: newY };
+          }
+        }
+      }
+    });
+    
+    if (bestMove) {
+      ghost.x = bestMove.x;
+      ghost.y = bestMove.y;
     }
-    // Duvar değilse hareket edebilir
-    if (board[newY][newX] !== 1) {
-      ghostPos = { x: newX, y: newY };
-      break;
-    }
-  }
+  });
   checkCollision();
   drawBoard();
 }
 
-// Çarpışma kontrolü: Pacman ile hayalet aynı konumda mı?
+// Çarpışma kontrolü: Pacman herhangi bir hayalet ile aynı konumda mı?
 function checkCollision() {
-  if (pacmanPos.x === ghostPos.x && pacmanPos.y === ghostPos.y) {
-    alert("Oyun Bitti! Pacman hayalet tarafından yakalandı.");
-    resetGame();
+  if (ghosts.some(ghost => ghost.x === pacmanPos.x && ghost.y === pacmanPos.y)) {
+    endGame("Oyun Bitti! Pacman hayalet tarafından yakalandı.");
   }
 }
 
-// Oyun bittiğinde yeniden başlatma
+// Tüm pelletler yendiyse oyunu kazan
+function checkWinCondition() {
+  for (let row of board) {
+    if (row.includes(0)) return;
+  }
+  endGame("Kazandınız! Tüm pelletler yendi.");
+}
+
+// Oyun bittiğinde mesaj göster ve hayalet hareketini durdur
+function endGame(text) {
+  clearInterval(ghostInterval);
+  showMessage(text);
+}
+
+// Oyun Sonu mesajını göster
+function showMessage(text) {
+  messageText.textContent = text;
+  messageDiv.classList.remove('hidden');
+}
+
+// Mesajı gizle
+function hideMessage() {
+  messageDiv.classList.add('hidden');
+}
+
+// Oyunu yeniden başlat
 function resetGame() {
-  // Tüm pelletleri yeniden yerleştir (yeni bir oyun için boş hücreler pellet olarak ayarlanır)
+  // Yenen pelletleri yeniden aktif hale getir (4 -> 0)
   for (let y = 0; y < board.length; y++) {
     for (let x = 0; x < board[y].length; x++) {
-      if (board[y][x] === 4) { // boş hücre
+      if (board[y][x] === 4) {
         board[y][x] = 0;
       }
     }
   }
-  // Başlangıç konumlarını sıfırla
   pacmanPos = { x: 1, y: 1 };
-  ghostPos = { x: 8, y: 1 };
+  ghosts = [
+    { x: 8, y: 1 },
+    { x: 8, y: 8 }
+  ];
   score = 0;
+  hideMessage();
   drawBoard();
+  ghostInterval = setInterval(moveGhosts, 500);
 }
 
-// Klavye ile kontrol
+// Klavye kontrolü
 document.addEventListener('keydown', function(e) {
   switch(e.key) {
     case "ArrowUp":
@@ -152,7 +188,9 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
+// Yeniden Başlat butonuna tıklayınca oyunu sıfırla
+restartBtn.addEventListener('click', resetGame);
+
 // Oyunu başlat
 setupBoard();
-// Her 500ms'de bir hayaletin hareket etmesi
-setInterval(moveGhost, 500);
+ghostInterval = setInterval(moveGhosts, 500);
