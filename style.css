@@ -1,64 +1,93 @@
 body {
   text-align: center;
-  font-family: Arial, sans-serif;
-  background-color: #222;
+  font-family: 'Press Start 2P', cursive;
+  background: linear-gradient(135deg, #1a1a1a, #333);
   color: #fff;
-  position: relative;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
 }
 
 #game-board {
   display: grid;
-  margin: 20px auto;
-  grid-gap: 1px;
+  margin: 0 auto 20px;
+  grid-gap: 2px;
   background-color: #000;
+  border: 4px solid #555;
+  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+  /* Hücre sayısına göre sütun genişliğini ayarlıyoruz */
 }
 
-/* Her hücre 20x20px boyutunda */
 .cell {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  transition: background-color 0.3s;
 }
 
-/* Duvarlar için mavi renk */
+/* Duvarlar: Derin mavi tonları ve iç gölge */
 .wall {
-  background-color: blue;
+  background: linear-gradient(135deg, #0000aa, #0044ff);
+  box-shadow: inset 0 0 5px #000;
 }
 
-/* Pellet için küçük sarı daire */
+/* Pellet: Küçük ve parlak */
 .pellet {
   background-color: yellow;
   border-radius: 50%;
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   margin: auto;
-  margin-top: 5px;
+  margin-top: 8px;
 }
 
-/* Pacman için turuncu daire */
+/* Pacman: Turuncu ve 'chomp' animasyonu */
 .pacman {
   background-color: orange;
   border-radius: 50%;
+  animation: chomp 0.5s infinite;
 }
 
-/* Hayalet için kırmızı daire */
+/* Aç kapa animasyonu için clip-path kullanıyoruz */
+@keyframes chomp {
+  0%, 100% {
+    clip-path: circle(50%);
+  }
+  50% {
+    clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+  }
+}
+
+/* Hayalet: Kırmızı tonlarda gradient ve hafif nabız animasyonu */
 .ghost {
-  background-color: red;
+  background: linear-gradient(135deg, #ff0000, #aa0000);
   border-radius: 50%;
+  animation: ghostPulse 1s infinite;
+}
+
+@keyframes ghostPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 #score {
-  margin-top: 20px;
-  font-size: 20px;
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
-/* Oyun Sonu Mesajı Stili */
 #message {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0,0,0,0.85);
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -77,4 +106,14 @@ body {
   padding: 10px 20px;
   font-size: 1rem;
   cursor: pointer;
+  background-color: #ff6600;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  transition: background-color 0.3s;
+}
+
+#restart-btn:hover {
+  background-color: #ff9900;
 }
