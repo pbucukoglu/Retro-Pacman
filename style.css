@@ -1,3 +1,4 @@
+/* Retro görünüm için font ayarı */
 body {
   text-align: center;
   font-family: 'Press Start 2P', cursive;
@@ -11,29 +12,30 @@ h1 {
   margin-bottom: 20px;
 }
 
+/* Oyun alanı için temel stil */
 #game-board {
   display: grid;
   margin: 0 auto 20px;
-  grid-gap: 2px;
+  grid-gap: 2px; /* Hücreler arası boşluk */
   background-color: #000;
   border: 4px solid #555;
   box-shadow: 0 0 20px rgba(0,0,0,0.8);
-  /* Hücre sayısına göre sütun genişliğini ayarlıyoruz */
 }
 
+/* Her hücre 24x24 piksel olacak şekilde ayarlandı */
 .cell {
   width: 24px;
   height: 24px;
   transition: background-color 0.3s;
 }
 
-/* Duvarlar: Derin mavi tonları ve iç gölge */
+/* Duvarlar: Derin mavi gradient ve iç gölge */
 .wall {
   background: linear-gradient(135deg, #0000aa, #0044ff);
   box-shadow: inset 0 0 5px #000;
 }
 
-/* Pellet: Küçük ve parlak */
+/* Pellet: Küçük sarı nokta */
 .pellet {
   background-color: yellow;
   border-radius: 50%;
@@ -43,14 +45,14 @@ h1 {
   margin-top: 8px;
 }
 
-/* Pacman: Turuncu ve 'chomp' animasyonu */
+/* Pacman: Turuncu daire ve 'chomp' animasyonu */
 .pacman {
   background-color: orange;
   border-radius: 50%;
   animation: chomp 0.5s infinite;
 }
 
-/* Aç kapa animasyonu için clip-path kullanıyoruz */
+/* Pacman'in ağız açıp kapama animasyonu */
 @keyframes chomp {
   0%, 100% {
     clip-path: circle(50%);
@@ -60,7 +62,7 @@ h1 {
   }
 }
 
-/* Hayalet: Kırmızı tonlarda gradient ve hafif nabız animasyonu */
+/* Hayalet: Kırmızı gradient ve nabız animasyonu */
 .ghost {
   background: linear-gradient(135deg, #ff0000, #aa0000);
   border-radius: 50%;
@@ -76,11 +78,13 @@ h1 {
   }
 }
 
+/* Skor göstergesi */
 #score {
   font-size: 24px;
   margin-bottom: 20px;
 }
 
+/* Oyun sonu mesaj kutusu (modal) */
 #message {
   position: fixed;
   top: 0;
@@ -97,10 +101,12 @@ h1 {
   z-index: 10;
 }
 
+/* Başta gizli olsun */
 .hidden {
   display: none;
 }
 
+/* Yeniden Başlat butonu stili */
 #restart-btn {
   margin-top: 20px;
   padding: 10px 20px;
