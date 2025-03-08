@@ -1,97 +1,116 @@
-/* Retro görünüm için font ayarı */
-body {
-  text-align: center;
+/* Sayfayı ortalamak ve kaydırmayı kapatmak */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
   font-family: 'Press Start 2P', cursive;
   background: linear-gradient(135deg, #1a1a1a, #333);
   color: #fff;
-  margin: 0;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 h1 {
-  margin-bottom: 20px;
+  margin: 10px 0 5px;
+  font-size: 1.2rem;
 }
 
-/* Oyun alanı için temel stil */
+#score {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/* Oyun alanı: 80vmin x 80vmin, 10x10 grid */
 #game-board {
+  width: 80vmin;
+  height: 80vmin;
   display: grid;
-  margin: 0 auto 20px;
-  grid-gap: 2px; /* Hücreler arası boşluk */
+  grid-template-columns: repeat(10, 1fr);
+  grid-gap: 0.5vmin;
   background-color: #000;
   border: 4px solid #555;
   box-shadow: 0 0 20px rgba(0,0,0,0.8);
+  position: relative;
 }
 
-/* Her hücre 24x24 piksel olacak şekilde ayarlandı */
+/* Hücreler */
 .cell {
-  width: 24px;
-  height: 24px;
-  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000;
 }
 
-/* Duvarlar: Derin mavi gradient ve iç gölge */
+/* Duvar */
 .wall {
   background: linear-gradient(135deg, #0000aa, #0044ff);
   box-shadow: inset 0 0 5px #000;
 }
 
-/* Pellet: Küçük sarı nokta */
+/* Normal pellet: %30 boyut */
 .pellet {
+  width: 30%;
+  height: 30%;
   background-color: yellow;
   border-radius: 50%;
-  width: 8px;
-  height: 8px;
-  margin: auto;
-  margin-top: 8px;
 }
 
-/* Pacman: Turuncu daire ve 'chomp' animasyonu */
+/* Power pellet: %50 boyut, parlak */
+.power {
+  width: 50%;
+  height: 50%;
+  background-color: #ffcc00;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #fff;
+}
+
+/* Pacman */
 .pacman {
+  width: 80%;
+  height: 80%;
   background-color: orange;
   border-radius: 50%;
   animation: chomp 0.5s infinite;
 }
 
-/* Pacman'in ağız açıp kapama animasyonu */
 @keyframes chomp {
-  0%, 100% {
-    clip-path: circle(50%);
-  }
-  50% {
-    clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
-  }
+  0%, 100% { clip-path: circle(50%); }
+  50% { clip-path: polygon(0% 0%, 100% 50%, 0% 100%); }
 }
 
-/* Hayalet: Kırmızı gradient ve nabız animasyonu */
+/* Hayalet normal (bu sınıf eklenip inline style ile renk ayarlanacak) */
 .ghost {
-  background: linear-gradient(135deg, #ff0000, #aa0000);
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  animation: ghostPulse 1s infinite;
+}
+
+/* Savunmasız (vulnerable) hayalet */
+.vulnerable {
+  width: 80%;
+  height: 80%;
+  background: linear-gradient(135deg, #ffffff, #aaaaaa);
   border-radius: 50%;
   animation: ghostPulse 1s infinite;
 }
 
 @keyframes ghostPulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
-/* Skor göstergesi */
-#score {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-/* Oyun sonu mesaj kutusu (modal) */
+/* Oyun Sonu / Seviye Geçiş Mesaj Kutusu (Modal) */
 #message {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.85);
+  background-color: rgba(0,0,0,0.8);
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -101,12 +120,12 @@ h1 {
   z-index: 10;
 }
 
-/* Başta gizli olsun */
+/* Gizli */
 .hidden {
-  display: none;
+  display: none !important;
 }
 
-/* Yeniden Başlat butonu stili */
+/* Yeniden Başlat Butonu */
 #restart-btn {
   margin-top: 20px;
   padding: 10px 20px;
