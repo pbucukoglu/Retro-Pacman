@@ -3,17 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>Pacman Oyunu</title>
+  <!-- Harici CSS dosyamız -->
   <link rel="stylesheet" href="style.css">
+  <!-- Retro font (isteğe bağlı) -->
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 </head>
 <body>
   <h1>Pacman Oyunu</h1>
+
+  <!-- Oyun Alanı -->
   <div id="game-board"></div>
+
+  <!-- Skor Göstergesi -->
   <div id="score">Skor: 0</div>
+
   <!-- Oyun Sonu Mesajı ve Yeniden Başlat Butonu -->
   <div id="message" class="hidden">
     <p id="message-text"></p>
     <button id="restart-btn">Yeniden Başlat</button>
   </div>
+
+  <!-- Harici JS dosyamız -->
   <script src="script.js"></script>
 </body>
 </html>
