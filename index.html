@@ -2,28 +2,28 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Pacman Oyunu</title>
-  <!-- Harici CSS dosyamız -->
-  <link rel="stylesheet" href="style.css">
-  <!-- Retro font (isteğe bağlı) -->
+  <title>Pacman Oyunu - Seviyeli</title>
+  <!-- Retro font -->
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+  <!-- Harici CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Pacman Oyunu</h1>
 
-  <!-- Oyun Alanı -->
+  <!-- Skor & Seviye Göstergesi -->
+  <div id="score">Skor: 0 | Seviye: 1</div>
+
+  <!-- Oyun Alanı (Responsive, 80vmin x 80vmin) -->
   <div id="game-board"></div>
 
-  <!-- Skor Göstergesi -->
-  <div id="score">Skor: 0</div>
-
-  <!-- Oyun Sonu Mesajı ve Yeniden Başlat Butonu -->
+  <!-- Oyun Sonu / Seviye Geçiş Mesaj Kutusu (Modal) -->
   <div id="message" class="hidden">
     <p id="message-text"></p>
     <button id="restart-btn">Yeniden Başlat</button>
   </div>
 
-  <!-- Harici JS dosyamız -->
+  <!-- Harici JS -->
   <script src="script.js"></script>
 </body>
 </html>
