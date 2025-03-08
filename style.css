@@ -1,0 +1,51 @@
+body {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  background-color: #222;
+  color: #fff;
+}
+
+#game-board {
+  display: grid;
+  margin: 20px auto;
+  grid-gap: 1px;
+  background-color: #000;
+}
+
+/* Her hücre 20x20px boyutunda */
+.cell {
+  width: 20px;
+  height: 20px;
+}
+
+/* Duvarlar için mavi renk */
+.wall {
+  background-color: blue;
+}
+
+/* Pellet için küçük sarı daire */
+.pellet {
+  background-color: yellow;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  margin: auto;
+  margin-top: 5px;
+}
+
+/* Pacman için turuncu daire */
+.pacman {
+  background-color: orange;
+  border-radius: 50%;
+}
+
+/* Hayalet için kırmızı daire */
+.ghost {
+  background-color: red;
+  border-radius: 50%;
+}
+
+#score {
+  margin-top: 20px;
+  font-size: 20px;
+}
